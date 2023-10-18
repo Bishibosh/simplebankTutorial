@@ -1,0 +1,15 @@
+# This will be unused due to not having a free tier aws account. Just doing this for learning muscle memory.
+# you can use this to give rbac access to another user, in this case, github-ci. To do this:
+# kubectl apply -f eks/aws-auth.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::123456789123:user/github-ci
+      username: github-ci
+      groups:
+        - system:masters

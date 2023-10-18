@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-bank-api-service
+spec:
+  selector:
+    app.kubernetes.io/name: simple-bank-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  # type: LoadBalancer # default is ClusterIP if this isn't here, so it would be internal only
+  type: ClusterIP # We are going to setup Ingress rules instead, leaving the above line for learning only.
