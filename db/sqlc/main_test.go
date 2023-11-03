@@ -1,17 +1,16 @@
 package db
 
 import (
-	"database/sql"
+	"context"
 	"log"
 	"os"
 	"testing"
 
-	_ "github.com/lib/pq" // because we don't directly call this, we need to add _ ahead of it so that it is included
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/techschool/simplebank/util"
 )
 
-var testQueries *Queries
-var testDB *sql.DB
+var testStore Store
 
 // Test main is the entry point for all golang tests for a specific package
 func TestMain(m *testing.M) {
@@ -19,12 +18,11 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("cannot read environment config:", err)
 	}
-	testDB, err = sql.Open(config.DBDriver, config.DBSource)
+	connPool, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
 
-	testQueries = New(testDB)
-
+	testStore = NewStore(connPool)
 	os.Exit(m.Run()) // This tells unit tests that they can start running, and will return an exit code which should go to os.
 }
